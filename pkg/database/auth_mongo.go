@@ -45,7 +45,7 @@ func UpdateUser(user model.User) (string, error) {
 		return user.ID, err
 	}
 
-	result := User.FindOneAndUpdate(context.TODO(), bson.M{"_id": id}, bson.D{{"$set", bson.D{{"refresh_token", user.RefreshToken}}}})
+	result := User.FindOneAndUpdate(context.TODO(), bson.M{"_id": id}, bson.D{{Key: "$set", Value: bson.D{{Key: "refresh_token", Value: user.RefreshToken}}}})
 	err = result.Decode(&user)
 	if err != nil {
 		logrus.Errorf("unable to find user: %s", err.Error())

@@ -54,6 +54,7 @@ func signIn(c *gin.Context) {
 	refreshDB := database.CheckRefreshValid(input)
 	if refreshDB == "" {
 		logrus.Errorf("invalid refresh token")
+		newErrorResponse(c, http.StatusBadRequest, "invalid refresh token")
 		return
 	}
 
@@ -69,6 +70,7 @@ func signIn(c *gin.Context) {
 	id, err := database.UpdateUser(input)
 	if err != nil {
 		logrus.Errorf("user not found: %s", err.Error())
+
 		return
 	}
 

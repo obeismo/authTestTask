@@ -14,24 +14,23 @@ var (
 	User   *mongo.Collection
 )
 
-func InitDB(uri string, database string) error {
+func InitDB(uri, database, collection string) error {
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 	opts := options.Client().ApplyURI(uri).SetServerAPIOptions(serverAPI)
 
 	localClient, err := mongo.Connect(context.TODO(), opts)
 	if err != nil {
 		logrus.Fatalf("failed to connect to db: %s", err.Error())
-		return err
 	}
 	client = localClient
 
-	User = client.Database(database).Collection("users")
+	User = client.Database(database).Collection(collection)
 
 	err = client.Database("admin").RunCommand(context.TODO(), bson.D{{Key: "ping", Value: 1}}).Err()
 	if err != nil {
 		logrus.Fatalf("troubles with mongodb: %s", err.Error())
-		return err
 	}
+	logrus.Println("Successfully connected and pinged")
 
 	return nil
 }
